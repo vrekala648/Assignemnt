@@ -1,0 +1,101 @@
+patient_id,name,age,gender,blood_group,diagnosis,heart_rate,blood_pressure_sys,blood_pressure_dia,temperature,admission_date,status
+P0001,Patient 1,79,Other,A-,Anaemia,108.0,150.0,102.0,40.0,2023-06-26,Critical
+P0002,Patient 2,26,Other,A-,Anaemia,88.0,156.0,60.0,37.1,2024-08-20,Admitted
+P0003,Patient 3,79,Male,B+,Kidney Stones,100.0,94.0,98.0,37.7,2024-09-07,Stable
+P0004,Patient 4,77,Female,AB+,COVID-19,85.0,124.0,88.0,39.4,2024-10-10,Stable
+P0005,Patient 5,47,Other,O+,Heart Failure,62.0,167.0,72.0,37.5,2024-04-20,Discharged
+P0006,Patient 6,8,Female,B+,Asthma,68.0,151.0,86.0,39.5,2023-02-26,Discharged
+P0007,Patient 7,42,Male,O+,Obesity,83.0,105.0,63.0,39.8,2023-03-01,Discharged
+P0008,Patient 8,77,Other,O+,COVID-19,89.0,93.0,88.0,38.1,2024-03-02,Admitted
+P0009,Patient 9,55,Other,O+,Asthma,73.0,115.0,75.0,39.0,2023-11-19,Stable
+P0010,Patient 10,14,Other,A+,Obesity,97.0,166.0,95.0,40.0,2024-07-23,Discharged
+P0011,Patient 11,36,Female,B-,Diabetes Type 2,67.0,179.0,107.0,39.5,2023-06-11,Stable
+P0012,Patient 12,33,Other,A+,Pneumonia,98.0,91.0,92.0,38.7,2023-03-18,Stable
+P0013,Patient 13,75,Male,B+,Obesity,62.0,131.0,75.0,40.2,2024-09-15,Discharged
+P0014,Patient 14,32,Female,B-,Anaemia,119.0,145.0,61.0,38.0,2024-06-25,Under Observation
+P0015,Patient 15,89,Female,AB+,Obesity,66.0,165.0,94.0,36.4,2023-11-13,Admitted
+P0016,Patient 16,6,Other,O-,Pneumonia,99.0,167.0,86.0,39.5,2023-06-30,Admitted
+P0017,Patient 17,88,Female,A+,Pneumonia,94.0,174.0,80.0,36.8,2024-07-15,Critical
+P0018,Patient 18,50,Male,B-,Appendicitis,96.0,110.0,69.0,39.7,2023-12-02,Admitted
+P0019,Patient 19,20,Male,B-,Heart Failure,100.0,167.0,105.0,39.3,2024-07-10,Discharged
+P0020,Patient 20,14,Male,O-,Arthritis,78.0,119.0,80.0,36.5,2023-01-09,Stable
+P0021,Patient 21,66,Female,O-,COVID-19,100.0,105.0,90.0,40.2,2024-01-28,Critical
+P0022,Patient 22,78,Other,AB-,Kidney Stones,113.0,165.0,60.0,39.5,2023-08-20,Admitted
+P0023,Patient 23,80,Other,A+,Fracture,85.0,125.0,92.0,40.1,2024-02-09,Admitted
+P0024,Patient 24,52,Female,O-,Depression,62.0,98.0,87.0,37.2,2023-08-27,Discharged
+P0025,Patient 25,57,Male,A+,Kidney Stones,116.0,136.0,77.0,39.7,2024-02-09,Discharged
+P0026,Patient 26,71,Male,A+,Migraine,93.0,138.0,60.0,38.7,2023-09-19,Under Observation
+P0027,Patient 27,17,Other,O+,Gastritis,75.0,150.0,67.0,36.4,2024-03-14,Discharged
+P0028,Patient 28,50,Male,AB+,Anaemia,78.0,170.0,91.0,38.4,2024-04-30,Under Observation
+P0029,Patient 29,65,Female,O-,Gastritis,63.0,171.0,95.0,39.9,2023-10-24,Under Observation
+P0030,Patient 30,57,Female,AB-,Migraine,58.0,108.0,82.0,39.2,2024-03-01,Discharged
+P0031,Patient 31,78,Male,AB-,Arthritis,72.0,139.0,66.0,39.8,2023-07-07,Admitted
+P0032,Patient 32,47,Other,O+,Gastritis,93.0,121.0,95.0,37.0,2023-05-20,Under Observation
+P0033,Patient 33,68,Female,B-,Kidney Stones,111.0,101.0,110.0,39.6,2023-05-10,Discharged
+P0034,Patient 34,80,Male,O-,Arthritis,119.0,93.0,75.0,36.1,2024-02-27,Discharged
+P0035,Patient 35,68,Female,O+,COVID-19,113.0,98.0,62.0,38.8,2024-02-15,Stable
+P0036,Patient 36,79,Female,AB+,Migraine,114.0,131.0,71.0,36.7,2024-07-29,Admitted
+P0037,Patient 37,72,Female,AB+,COVID-19,64.0,135.0,106.0,36.3,2024-01-17,Discharged
+P0038,Patient 38,26,Other,B+,Kidney Stones,85.0,152.0,64.0,40.2,2024-06-02,Stable
+P0039,Patient 39,87,Female,A+,Diabetes Type 2,68.0,149.0,84.0,37.8,2023-09-07,Stable
+P0040,Patient 40,42,Other,A-,Asthma,84.0,133.0,78.0,36.0,2024-02-14,Discharged
+P0041,Patient 41,28,Male,B+,Arthritis,94.0,139.0,92.0,39.9,2023-05-16,Critical
+P0042,Patient 42,78,Female,O-,Migraine,98.0,161.0,81.0,38.5,2024-02-08,Critical
+P0043,Patient 43,77,Female,AB+,Appendicitis,114.0,158.0,68.0,36.9,2024-05-15,Stable
+P0044,Patient 44,54,Female,A+,Diabetes Type 2,103.0,176.0,69.0,38.1,2024-11-04,Under Observation
+P0045,Patient 45,48,Other,O-,COVID-19,88.0,99.0,65.0,37.3,2024-05-03,Under Observation
+P0046,Patient 46,21,Other,A-,Kidney Stones,63.0,117.0,71.0,38.5,2023-02-17,Critical
+P0047,Patient 47,48,Female,AB-,Asthma,62.0,160.0,79.0,38.7,2023-07-04,Critical
+P0048,Patient 48,23,Female,A+,Obesity,113.0,122.0,62.0,36.8,2023-02-16,Stable
+P0049,Patient 49,59,Female,B+,Obesity,72.0,159.0,85.0,36.7,2024-03-06,Critical
+P0050,Patient 50,67,Female,A+,Anaemia,101.0,100.0,81.0,40.5,2023-01-06,Critical
+P0051,Patient 51,34,Female,AB-,Gastritis,83.0,163.0,94.0,39.9,2023-03-22,Discharged
+P0052,Patient 52,29,Female,B+,Kidney Stones,87.0,101.0,64.0,38.0,2023-08-11,Admitted
+P0053,Patient 53,29,Male,O+,Hypertension,62.0,158.0,63.0,39.7,2024-05-22,Under Observation
+P0054,Patient 54,6,Female,A+,Diabetes Type 2,120.0,124.0,87.0,36.0,2024-02-20,Discharged
+P0055,Patient 55,71,Other,B+,Anaemia,96.0,130.0,85.0,40.4,2024-06-18,Discharged
+P0056,Patient 56,68,Female,A-,Pneumonia,63.0,174.0,60.0,37.6,2024-05-08,Critical
+P0057,Patient 57,80,Female,A-,Appendicitis,63.0,156.0,78.0,40.3,2024-08-10,Critical
+P0058,Patient 58,89,Other,B-,Asthma,111.0,136.0,97.0,37.1,2023-09-11,Discharged
+P0059,Patient 59,83,Other,O-,Depression,87.0,137.0,73.0,40.0,2024-04-11,Admitted
+P0060,Patient 60,8,Male,B-,Migraine,87.0,153.0,77.0,39.0,2023-06-15,Admitted
+P0061,Patient 61,15,Male,A-,Kidney Stones,116.0,157.0,65.0,36.0,2023-03-11,Under Observation
+P0062,Patient 62,74,Male,B+,Hypertension,67.0,123.0,64.0,39.7,2023-04-22,Under Observation
+P0063,Patient 63,42,Other,A+,Gastritis,59.0,150.0,85.0,39.9,2024-08-21,Discharged
+P0064,Patient 64,38,Male,AB-,Arthritis,84.0,103.0,90.0,38.9,2023-01-01,Critical
+P0065,Patient 65,53,Male,B+,Arthritis,93.0,96.0,80.0,37.7,2023-10-31,Admitted
+P0066,Patient 66,19,Female,B+,Migraine,77.0,97.0,69.0,39.2,2024-06-21,Under Observation
+P0067,Patient 67,90,Male,B-,Depression,85.0,178.0,78.0,40.0,2024-11-22,Discharged
+P0068,Patient 68,35,Female,A+,Asthma,92.0,173.0,60.0,36.2,2023-10-19,Discharged
+P0069,Patient 69,67,Other,B-,COVID-19,104.0,118.0,89.0,37.0,2024-01-18,Stable
+P0070,Patient 70,17,Male,O-,Kidney Stones,58.0,142.0,88.0,37.6,2024-08-16,Critical
+P0071,Patient 71,55,Female,AB-,Hypertension,89.0,133.0,110.0,37.2,2023-01-02,Admitted
+P0072,Patient 72,8,Male,B-,Migraine,114.0,118.0,110.0,39.4,2023-08-21,Discharged
+P0073,Patient 73,25,Male,AB-,Arthritis,116.0,151.0,72.0,36.1,2023-02-10,Under Observation
+P0074,Patient 74,6,Male,B+,Gastritis,95.0,93.0,70.0,38.6,2024-07-15,Discharged
+P0075,Patient 75,14,Male,O+,COVID-19,78.0,152.0,103.0,40.4,2024-07-11,Admitted
+P0076,Patient 76,12,Female,AB+,Anaemia,76.0,160.0,72.0,37.1,2023-10-21,Under Observation
+P0077,Patient 77,18,Male,B-,Anaemia,100.0,147.0,67.0,37.6,2023-11-20,Discharged
+P0078,Patient 78,55,Other,B-,Gastritis,79.0,141.0,79.0,39.8,2023-10-20,Discharged
+P0079,Patient 79,36,Other,A-,Kidney Stones,79.0,159.0,98.0,39.0,2023-11-19,Under Observation
+P0080,Patient 80,18,Female,B+,Depression,101.0,156.0,74.0,40.4,2024-04-30,Under Observation
+P0081,Patient 81,23,Male,B-,Pneumonia,92.0,140.0,71.0,39.6,2024-02-24,Under Observation
+P0082,Patient 82,85,Female,B-,Hypertension,64.0,138.0,79.0,36.2,2024-05-21,Critical
+P0083,Patient 83,53,Other,B-,Fracture,96.0,175.0,100.0,39.2,2024-03-06,Under Observation
+P0084,Patient 84,6,Female,O-,Kidney Stones,113.0,148.0,104.0,39.0,2024-11-02,Critical
+P0085,Patient 85,75,Male,AB+,Migraine,72.0,163.0,75.0,37.3,2023-09-10,Stable
+P0086,Patient 86,17,Female,O+,Heart Failure,86.0,95.0,84.0,38.4,2023-09-26,Critical
+P0087,Patient 87,39,Male,B+,Depression,120.0,178.0,85.0,39.7,2023-08-04,Under Observation
+P0088,Patient 88,58,Male,B+,Depression,81.0,123.0,76.0,39.1,2023-12-16,Under Observation
+P0089,Patient 89,82,Male,A-,Gastritis,81.0,147.0,108.0,36.2,2023-08-17,Admitted
+P0090,Patient 90,63,Male,O+,Depression,111.0,114.0,82.0,38.7,2023-06-27,Discharged
+P0091,Patient 91,33,Female,O+,Fracture,114.0,161.0,95.0,36.1,2023-09-11,Admitted
+P0092,Patient 92,32,Male,AB+,COVID-19,70.0,156.0,101.0,37.3,2023-12-19,Stable
+P0093,Patient 93,30,Male,B+,Arthritis,94.0,150.0,107.0,38.9,2023-09-14,Critical
+P0094,Patient 94,39,Male,AB-,Fracture,74.0,129.0,93.0,38.2,2023-09-14,Admitted
+P0095,Patient 95,78,Female,A-,Hypertension,61.0,166.0,101.0,38.9,2024-02-03,Stable
+P0096,Patient 96,46,Female,O-,Appendicitis,72.0,121.0,71.0,40.3,2024-04-25,Stable
+P0097,Patient 97,46,Male,O-,Diabetes Type 2,103.0,131.0,87.0,40.4,2024-02-13,Under Observation
+P0098,Patient 98,90,Female,AB-,Hypertension,55.0,170.0,77.0,37.1,2024-03-11,Under Observation
+P0099,Patient 99,25,Other,AB+,COVID-19,84.0,174.0,87.0,36.0,2024-07-10,Critical
+P0100,Patient 100,87,Male,O+,Depression,72.0,144.0,98.0,39.3,2023-02-25,Discharged

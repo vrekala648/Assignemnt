@@ -1,0 +1,489 @@
+---
+title: "EDA Report for Task 2"
+author: 'Student ID: 35066669'
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+---
+
+
+# Introduction 
+
+The main goal of this report's extensive Exploratory Data Analysis (EDA) of a patient health dataset is to comprehend the data structure, quality, and underlying trends. Finding important health markers and lifestyle elements that could affect stroke risk and general patient well-being is the main goal of the investigation. The report offers a data-driven basis for healthcare insights and decision-making by methodically analysing characteristics like age, body mass index (BMI), average glucose levels, hypertension, smoking status, physical activity, and regional distribution.
+
+This study covers a number of crucial steps in the data analysis process. To learn about the dataset's dimensions, structure, and variable types, we first import and examine it. A comprehensive data cleaning and preparation step comes next, during which duplicate entries are eliminated, missing values are handled using the proper imputation techniques, and data types are standardised to guarantee accuracy and consistency. To improve data reliability and avoid skewed or deceptive analytical results, several preparation procedures are crucial.
+
+Descriptive statistical techniques are then used to summarise numerical and categorical variables, providing information on distributions, central tendencies, and variability. In order to examine feature distributions and correlations, the study also makes use of a variety of visualisation techniques, such as histograms, density plots, boxplots, scatter plots, and bar charts. Furthermore, connections between numerical variables are found and possible predictors of stroke risk are highlighted using correlation analysis and heatmaps.
+
+This report's primary findings include the identification of noteworthy patterns and correlations, such as the influence of lifestyle factors like smoking and physical activity on stroke risk, as well as the effects of BMI, glucose levels, and hypertension. In addition to supporting early risk detection, preventive measures, and the creation of sophisticated predictive models in healthcare analytics, these insights enhance our understanding of patient health profiles.
+
+
+# Initial Setup and Environment Configuration
+
+The R environment was set up at this point to guarantee a tidy, well-organised, and effective workflow for carrying out the exploratory data analysis. Knitr:opts_chunk$set() was used to specify the RMarkdown chunk settings, enabling code display (echo = TRUE) and suppressing superfluous messages and warnings (message = FALSE, warning = FALSE). This strategy assisted in keeping the report's output intelligible, professional, and clear throughout. In order to ensure that the analysis started in a new environment free from interference from existing objects, the workspace was also emptied using rm(list = ls()) to delete any previously saved variables.
+
+The necessary libraries for data processing, analysis, and visualization were loaded. The tidyverse package was used as an integrated set of data science tools, especially for jobs involving data processing and wrangling. For dependable and effective data input, particularly when working with huge dataset's, the readr software was utilized. To accomplish organised and effective data manipulation, the dplyr package offered a number of methods, including filter(), select(), mutate(), and summarise().
+
+The ggplot2 software was used for data visualization in order to produce excellent, configurable, well-labeled plots that facilitate efficient data comprehension. Furthermore, data types can be reshaped using the reshape2 package, which is especially helpful when preparing data for visualisations like correlation heatmaps.
+
+All things considered, this configuration guaranteed that the analytical environment was fully prepared, repeatable, and well-structured for carrying out an extensive exploratory data analysis.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+rm(list = ls())
+
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Data Import and Initial Exploration
+
+At this point, the dataset was imported and examined to learn about its size, structure, and general features. The read_csv() method from the readr package was used to load the dataset, ensuring reliable and efficient data import—especially for large datasets. I kept the data in a variable called patient_df to facilitate access and additional analysis.
+
+The first few rows of the dataset were displayed using the head() function and slice_head() from the dplyr package to obtain an introductory overview. This made it possible to examine the data format, variable names, and starting values, which made it easier to spot any glaring discrepancies. The number of rows and columns was then calculated using the dim () method, demonstrating that the dataset had a sizable number of observations appropriate for in-depth examination.
+
+The str() function, which gave details on the data types of each variable, was used to analyse the dataset's structure. A more succinct and legible overview of the dataset was also provided by the glimpse() method, which was especially helpful for big datasets. All feature names were listed using the colnames() function, making it possible to comprehend the accessible variables.
+
+Lastly, descriptive statistics were produced for both numerical and categorical variables using the summary() function. For numerical data, this comprised metrics like minimum, maximum, mean, median, and quartiles; for categorical features, it included frequency counts. All things considered, this stage gave a basic grasp of the dataset and highlighted key features required for further data cleaning and analysis.
+
+
+```{r}
+# I loaded the dataset into a variable named patient_df using read_csv for efficient data import
+patient_df <- read_csv("data.csv")
+
+# I viewed the first few rows of the dataset to understand its initial structure
+head(patient_df)
+
+# I displayed a sample of the dataset using dplyr functions
+patient_df %>% slice_head(n = 6)
+
+# I checked the dimensions of the dataset (number of rows and columns)
+dim(patient_df)
+
+# I examined the structure of the dataset including variable types
+str(patient_df)
+
+# I used glimpse to get a quick overview of the dataset
+glimpse(patient_df)
+
+# I listed all feature names in the dataset
+colnames(patient_df)
+
+# I generated summary statistics to understand the distribution of variables
+summary(patient_df)
+
+
+```
+# Data Cleaning and Preparation
+
+To guarantee quality, consistency, and dependability for additional analysis, the dataset was cleaned and prepared at this stage. First, colSums(is.na()) was used to find missing values for all variables. The findings confirmed that the data was complete because there were no missing values in the dataset. However, imputation approaches to preserve robustness and show appropriate data pre-treatment procedures.. The method used to handle numerical data was median imputation, which is better than mean since it lessens the effect of skewed distributions and outliers. To maintain the integrity of categorical distributions, missing values for categorical variables were substituted using the mode, or most frequent value.
+
+
+The duplicated() function was then used to look at duplicate records. Every record in the dataset was distinct since there were no duplicate entries. Nevertheless, as a precaution to guarantee data integrity and avoid repetition in analysis, duplicates were eliminated using the distinct() function.
+
+These preparatory procedures cleaned and made the dataset consistent and ready for analysis. In order to prevent biased outcomes and enhance the general calibre of insights gleaned from the data, handling missing values and duplicates is crucial. Consequently, we successfully processed the dataset for further statistical analysis and visualization.
+
+
+```{r}
+# I checked for missing values in each column
+colSums(is.na(patient_df))
+
+# I imputed missing numeric values with median for better accuracy
+patient_df <- patient_df %>%
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), median(., na.rm = TRUE), .)))
+
+# I imputed missing categorical values with mode
+get_mode <- function(x) {
+  ux <- na.omit(unique(x))
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+patient_df <- patient_df %>%
+  mutate(across(where(is.character), ~ ifelse(is.na(.), get_mode(.), .)))
+
+# I verified missing values were handled
+colSums(is.na(patient_df))
+
+# I checked for duplicate rows
+sum(duplicated(patient_df))
+
+# I removed duplicate records
+patient_df <- distinct(patient_df)
+
+# I confirmed duplicates were removed
+sum(duplicated(patient_df))
+
+```
+# Data Type Conversion and Validation
+
+To guarantee that every variable was recorded in a manner suitable for precise analysis and visualisation, the dataset underwent data type conversion at this stage. First, the str() method was used to look at the dataset's structure. This demonstrated that a number of categorical variables, including Gender, Work Type, Smoking Status, Physical Activity, and Region, were saved as character data types and gave a thorough description of each variable, including its data type.
+
+In order to fix this, the mutate() method and across(where(is.character), as.factor)) were used to transform all character variables into factors. R's ability to convert categorical variables into factors is crucial since it makes storage more effective and permits proper handling in statistical analysis and visualisations, especially when dealing with grouped data and categorical comparisons.
+
+Additionally, across(where(is.numeric), as.numeric) was used to specifically guarantee that numerical variables were in the proper format. This process ensured uniformity throughout the dataset and avoided potential problems during computations or models, even though the majority of variables were already appropriately saved as numeric.
+
+The str() function was used to reevaluate the dataset's structure following these conversions. While numerical variables maintained their proper numeric format, the updated result verified that all categorical variables had been effectively transformed into factors.
+
+All things considered, this stage made sure the dataset was appropriately organised, allowing for precise statistical analysis and useful visualisation. An essential preprocessing phase is managing data types correctly because improper formats might result in mistakes, deceptive outcomes, or limitations in analytical methods.
+
+```{r}
+# I checked the structure before conversion
+str(patient_df)
+
+# I converted categorical variables (character) to factors
+patient_df <- patient_df %>%
+  mutate(across(where(is.character), as.factor))
+
+# I ensured all numeric columns are correctly formatted
+patient_df <- patient_df %>%
+  mutate(across(where(is.numeric), as.numeric))
+
+# I verified updated structure after conversion
+str(patient_df)
+```
+# Descriptive Statistics for Numerical Variables
+
+At this point, the dataset's numerical characteristics were summarised using descriptive statistical techniques. A first overview, comprising important metrics like minimum, first quartile, median, mean, third quartile, and maximum values for each numerical variable, was obtained using the summary() function. This aided in comprehending the data's dispersion and distribution.
+
+The summarise() function was used in conjunction with across() to construct additional statistical measures in order to obtain deeper insights. For every numerical variable, these included the mean, median, standard deviation, variance, minimum, and maximum. These metrics are crucial for examining the dataset's variability and central tendency.
+
+The findings showed that whereas ID showed a consistent sequential pattern as predicted, factors like Age and Stroke Risk Score showed discernible variation across patients. The variance and standard deviation were included to assist determine how dispersed the data was. All things considered, these statistical summaries supported additional research and visualisation while offering a solid basis for comprehending the material.
+
+```{r}
+# I generated descriptive statistics for all numerical variables
+patient_df %>%
+  select(where(is.numeric)) %>%
+  summary()
+
+# I calculated additional statistics for numerical variables
+patient_df %>%
+  select(where(is.numeric)) %>%
+  summarise(across(everything(),
+                   list(
+                     mean = ~mean(., na.rm = TRUE),
+                     median = ~median(., na.rm = TRUE),
+                     sd = ~sd(., na.rm = TRUE),
+                     var = ~var(., na.rm = TRUE),
+                     min = ~min(., na.rm = TRUE),
+                     max = ~max(., na.rm = TRUE)
+                   )))
+```
+# Descriptive Statistics for Categorical Variables
+
+In order to comprehend the distribution of various categories within the dataset, categorical variables were evaluated at this step. The table() function was used in conjunction with summarise() and across() to create frequency tables. Each category inside variables like Gender, Work Type, Residence Type, Smoking Status, and Physical Activity was counted using this method. These counts assisted in determining the most prevalent categories and evaluating the dataset's general makeup.
+
+The prop.table() function was used to determine proportions in addition to frequency counts. This made it simpler to compare categories across variables regardless of dataset size by enabling the distribution of each category to be stated as a percentage. Finding dominant groupings and comprehending relative differences between categories are two areas where proportional analysis is especially helpful.
+
+The findings showed that categorisation distributions varied, with certain categories showing up more frequently than others. The dataset may be dominated by certain occupation kinds, smoking statuses, or levels of physical activity, for instance, indicating prevalent trends in the population.
+
+Overall, utilising both frequency and proportion tables to analyse categorical variables yielded insightful information about the dataset's structure. Finding patterns, imbalances, and potential biases that may affect subsequent statistical analysis and interpretation is crucial.
+
+```{r}
+# I generated frequency tables for categorical variables
+patient_df %>%
+  select(where(is.factor)) %>%
+  summarise(across(everything(), ~list(table(.))))
+
+# I calculated proportions for categorical variables
+patient_df %>%
+  select(where(is.factor)) %>%
+  summarise(across(everything(), ~list(prop.table(table(.)))))
+ 
+
+```
+# Distribution Analysis Using Histograms
+The distribution of three important numerical variables—age, body mass index (BMI), and average glucose level—was analysed using histograms. These visualisations enable the effective identification of patterns and abnormalities by offering insightful information about the data's frequency distribution, central tendency, and spread.
+
+The distribution of patient ages across the sample is shown by the Age histogram. The distribution seems to be very dispersed, suggesting that a variety of age groups are included in the sample. This implies patient population diversity, which is crucial for thorough health study. The dataset's dominant age groups may be shown by any discernible concentration of values within particular age ranges, which may have an impact on trends in stroke risk.
+
+The BMI histogram sheds light on how patients' body mass index varies. It is possible to determine if the majority of people fall into the normal, underweight, or overweight categories by looking at the distribution of BMI values. A greater percentage of individuals with increased BMI levels or the existence of outliers may be indicated by a wider spread or skewness in the distribution. Understanding BMI's distribution is crucial for assessing its association with stroke risk and other medical disorders because it is a crucial health indicator.
+
+The average glucose level histogram shows the population-wide variations in glucose levels. Instead of clustering around a particular range, the distribution appears to be quite consistent throughout a wide range of values, indicating that patients exhibit variable glucose levels. Because glucose levels are strongly linked to diseases like diabetes and cardiovascular risk, this unpredictability is important. Any extreme values found in the distribution could point to possible outliers or people who pose a significant risk.
+
+All things considered, these histograms offer a clear visual depiction of the distribution of important health-related variables within the dataset. They aid in pattern recognition, outlier detection, and variability comprehension—all of which are critical for additional statistical analysis and interpretation.
+
+```{r}
+
+# I created histograms for Age, BMI, and Average Glucose Level
+
+ggplot(patient_df, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Age", x = "Age", y = "Frequency")
+
+ggplot(patient_df, aes(x = BMI)) +
+  geom_histogram(bins = 30, fill = "lightgreen", color = "black") +
+  labs(title = "Distribution of BMI", x = "BMI", y = "Frequency")
+
+ggplot(patient_df, aes(x = `Average Glucose Level`)) +
+  geom_histogram(bins = 30, fill = "salmon", color = "black") +
+  labs(title = "Distribution of Glucose Level", x = "Glucose Level", y = "Frequency")
+
+```
+# Distribution Analysis Using Density Plots
+The distribution of important numerical data, including age, body mass index (BMI), and average glucose level, was further examined using density plots. Unlike histograms, density plots provide a smooth representation of the data distribution, making it easier to observe underlying patterns, skewness, and the overall shape of the data.
+
+The distribution of age values throughout the dataset is shown by the continuous curve in the density plot for age. The distribution seems somewhat homogeneous, suggesting that patients are dispersed over several age groups without a significant concentration in one particular range. This implies that the dataset encompasses a wide range of demographics, which is advantageous for extrapolating findings about stroke risk and medical problems.
+
+The density map for body mass index (BMI) shows the distribution and concentration of BMI data. Peaks where data are more concentrated can be found more easily thanks to the smooth curve. Although minor deviations would suggest the existence of distinct BMI groups within the population, the distribution seems to be quite stable. This is crucial since BMI plays a big role in determining health risks, such as those associated with obesity and cardiovascular disorders.
+
+The distribution of glucose levels among patients is displayed in the Average Glucose Level density plot. Individual differences in glucose levels are indicated by the curve's reasonably even appearance over a broad range of values. This implies that the dataset has both high and low glucose measurements, which is essential for examining diseases like diabetes and how they relate to stroke risk.
+
+In general, density plots visualise data distributions more smoothly and clearly than histograms. They aid in finding trends, evaluating variability, and spotting possible outliers or skewness. These insights facilitate more analytical investigation and are crucial for comprehending the features of important health indicators.
+
+```{r}
+# I created density plots for Age, BMI, and Average Glucose Level
+
+ggplot(patient_df, aes(x = Age)) +
+  geom_density(fill = "skyblue") +
+  labs(title = "Density Plot of Age", x = "Age", y = "Density")
+
+ggplot(patient_df, aes(x = BMI)) +
+  geom_density(fill = "lightgreen") +
+  labs(title = "Density Plot of BMI", x = "BMI", y = "Density")
+
+ggplot(patient_df, aes(x = `Average Glucose Level`)) +
+  geom_density(fill = "salmon") +
+  labs(title = "Density Plot of Glucose Level", x = "Glucose Level", y = "Density")
+
+```
+# Comparative Analysis Using Boxplots
+
+The distribution of important numerical variables across several categorisation groupings was compared using boxplots. Meaningful comparisons between groups are made possible by these visualisations, which are especially good at spotting median values, variability, and possible outliers.
+
+BMI by Stroke Occurrence is shown in the first boxplot, which groups patients according to whether or not they had a stroke. This comparison aids in determining whether stroke survivors typically have higher BMI values. The dispersion of the box indicates variability, whereas the median line within each box clearly shows central tendency. Any discernible variations between the two groups could point to a connection between stroke risk and BMI.
+
+In order to compare glucose levels among various smoking categories, including non-smokers, past smokers, and current smokers, the second boxplot displays Average Glucose Level by Smoking Status. Differences in these groups' median glucose levels can reveal whether smoking habits are linked to variations in glucose levels. Outliers may also draw attention to people who have abnormally high or low glucose levels, which could have therapeutic implications.
+
+BMI by Physical Activity is displayed in the third boxplot, which compares BMI distributions across sedentary, mild, moderate, and active activity levels. This graphic aids in determining whether higher levels of physical activity are linked to lower BMI values. People who are more active are often predicted to have lower BMIs, and this plot makes it easy to see such tendencies.All things considered, boxplots offer a clear and efficient method of comparing distributions across categories. They provide important insights into the relationship between lifestyle and health factors and important indicators like BMI and glucose levels by highlighting variations in central tendency, spread, and outliers.
+
+
+```{r}
+# I created boxplots to compare distributions
+
+ggplot(patient_df, aes(x = as.factor(`Stroke Occurrence`), y = BMI)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "BMI by Stroke Occurrence", x = "Stroke Occurrence", y = "BMI")
+
+ggplot(patient_df, aes(x = `Smoking Status`, y = `Average Glucose Level`)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(title = "Glucose Level by Smoking Status", x = "Smoking Status", y = "Glucose Level")
+
+ggplot(patient_df, aes(x = `Physical Activity`, y = BMI)) +
+  geom_boxplot(fill = "salmon") +
+  labs(title = "BMI by Physical Activity", x = "Physical Activity", y = "BMI")
+
+```
+# Relationship Exploration Using Scatter Plots and Bar Charts
+
+Bar charts and scatter plots were used to evaluate the distribution of categorical features in the dataset and investigate correlations between variables. Finding trends, patterns, and possible correlations between health markers and stroke risk is made possible by these visualisations.
+
+Age vs. Stroke Risk Score, the first scatter plot, shows how stroke risk changes with age. According to the point distribution, there may be a positive correlation between stroke risk scores and age. Despite considerable variation, the general trend suggests that older people may be more vulnerable to stroke, which is consistent with accepted medical knowledge. The distribution of scores also shows that factors other than age have an impact on stroke risk.
+
+The association between body mass index and glucose levels is investigated in the second scatter plot, BMI vs. Average Glucose Level. A moderate relationship between BMI and glucose levels is shown by the plot's dispersed distribution. Higher BMI individuals seem to have a greater range of glucose levels, which could be a sign of a higher risk of metabolic diseases like diabetes. The lack of a strong linear trend, however, raises the possibility that changes in glucose levels cannot be entirely explained by BMI alone.
+
+Age vs. BMI, the third scatter plot, examines the differences in BMI between age groups. Age and BMI do not appear to have a strong linear relationship, as the distribution seems to be somewhat spread. This implies that a variety of lifestyle and genetic factors, rather than just age, have an impact on BMI.
+
+To evaluate categorical variables, bar charts were employed in addition to scatter plots. The frequency of people in various smoking categories is displayed in the Smoking Status Distribution bar chart. This gives context for assessing health hazards related to smoking activity and aids in identifying dominating groups, such as non-smokers or former smokers.
+
+Patients' distribution across sedentary, mild, moderate, and active activity levels is shown in the Physical Activity Distribution bar chart. The dataset's lifestyle trends can be better understood with the help of this visualisation. Given that poor physical activity is frequently associated with an increased risk of chronic diseases, a higher percentage of sedentary people may be a sign of possible health issues.
+
+The number of patients in each region is shown in the Regional Distribution bar chart. This helps determine whether the data is evenly distributed or concentrated in particular areas and offers insight into the geographical representation within the dataset.
+
+In general, bar charts and scatter plots work well together to analyse both numerical and categorical data. Bar charts give a clear picture of category distributions, whereas scatter plots show correlations and trends between continuous variables. When combined, these visualisations facilitate a better comprehension of the dataset and aid in the identification of important variables affecting stroke risk and patient outcomes.
+
+
+
+```{r}
+# I created scatter plots and bar charts
+
+# Scatter plots
+ggplot(patient_df, aes(x = Age, y = `Stroke Risk Score`)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Age vs Stroke Risk Score", x = "Age", y = "Stroke Risk Score")
+
+ggplot(patient_df, aes(x = BMI, y = `Average Glucose Level`)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "BMI vs Glucose Level", x = "BMI", y = "Glucose Level")
+
+ggplot(patient_df, aes(x = Age, y = BMI)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Age vs BMI", x = "Age", y = "BMI")
+
+# Bar charts
+ggplot(patient_df, aes(x = `Smoking Status`)) +
+  geom_bar(fill = "skyblue") +
+  labs(title = "Smoking Status Distribution", x = "Smoking Status", y = "Count")
+
+ggplot(patient_df, aes(x = `Physical Activity`)) +
+  geom_bar(fill = "lightgreen") +
+  labs(title = "Physical Activity Distribution", x = "Physical Activity", y = "Count")
+
+ggplot(patient_df, aes(x = Region)) +
+  geom_bar(fill = "salmon") +
+  labs(title = "Regional Distribution", x = "Region", y = "Count")
+
+```
+
+# Correlation Analysis Using Heatmap
+
+The associations between the dataset's numerical variables were examined using a correlation heatmap. To make sure that correlation analysis was carried out on the right variables, only numerical features were initially chosen using select(where(is.numeric)). The cor() function with the complete was then used to calculate the correlation matrix.The obs approach eliminates problems caused by missing values by only taking into account full cases.
+
+Pairwise relationships between numerical variables are represented by the resulting correlation matrix, with correlation values ranging from -1 to +1. A significant positive association is indicated by a number near +1, which means that when one variable rises, so does the other. On the other hand, a value near -1 denotes a strong negative association in which one variable falls as the other rises. Values close to 0 indicate a weak or nonexistent linear relationship between variables.
+
+The correlation matrix was converted into a long format using the melt() function from the reshape2 package to improve interpretability. Effective ggplot2 visualisation was made possible by this reorganisation. Geom_tile() was then used to construct the heatmap, where colours indicate the direction and strength of relationships. Green represented negative correlations, blue represented positive correlations, and white indicated weak or no association on a gradient scale.
+
+The heatmap offers a thorough summary of the relationships between numerical variables. Age, BMI, Average Glucose Level, and Stroke Risk Score, for example, may exhibit moderately positive associations, indicating that improvements in these health indicators may be linked to an increased risk of stroke. Furthermore, factors including heart disease and hypertension may show correlations with outcomes associated to stroke, reflecting known clinical associations.
+
+All things considered, the correlation heatmap is an effective tool for finding relationships, trends, and possible predictors in the dataset. It aids in highlighting important connections that individual analysis might not immediately reveal. These discoveries are crucial for directing additional statistical modelling, feature selection, and comprehending the fundamental elements affecting stroke risk and patient health.
+
+
+```{r}
+# I selected only numeric variables to compute correlations
+numeric_df <- patient_df %>% select(where(is.numeric))
+
+# I computed the correlation matrix
+cor_matrix <- cor(numeric_df, use = "complete.obs")
+
+# I converted the matrix into long format for plotting
+cor_melt <- reshape2::melt(cor_matrix)
+
+# I created a correlation heatmap to visualise relationships
+ggplot(cor_melt, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "green", high = "blue", mid = "white", midpoint = 0) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Correlation Heatmap", x = "", y = "", fill = "Correlation")
+
+```
+# Relationship Analysis Between Key Health Variables
+
+Boxplots and scatter plots were used to further examine the connections between key health variables and stroke risk. Finding patterns, relationships, and group differences within the dataset is made easier by these visualisations.
+
+The first graphic examines the relationship between body mass index and stroke risk (BMI vs. Stroke Risk Score). The association between these two variables is clearly seen by the scatter plot in conjunction with a linear regression line (geom_smooth(method = "lm"). greater BMI levels are typically associated with greater stroke risk scores, according to the trend line. The distribution of data points, however, shows diversity, indicating that although BMI raises the risk of stroke, other factors are also important.
+
+The association between age and glucose levels is investigated in the second plot, Age vs. Average Glucose Level. This plot's regression line aids in determining if glucose levels typically rise with ageing. A possible positive association is indicated by the pattern's mild upward appearance. This implies that higher glucose levels may be more common in older people, which is consistent with the higher risk of metabolic diseases like diabetes in ageing societies.
+
+The third visualisation, Hypertension vs. Stroke Risk Score, compares stroke risk scores in people with and without hypertension using a boxplot. The two groups' disparities in median values and variability are highlighted in this graphic.There is a clear correlation between hypertension and an increased risk of stroke, as patients with hypertension typically have higher median stroke risk scores. Further evidence that some people have far higher risk levels comes from the existence of outliers.
+
+All things considered, these visualisations offer insightful information on the relationship between stroke risk and important factors including age, BMI, and hypertension. They draw attention to significant patterns and reaffirm how these elements affect patient health outcomes.
+
+
+```{r}
+# I explored relationships between key variables using scatter plots
+
+ggplot(patient_df, aes(x = BMI, y = `Stroke Risk Score`)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  labs(title = "BMI vs Stroke Risk Score", x = "BMI", y = "Stroke Risk Score")
+
+ggplot(patient_df, aes(x = Age, y = `Average Glucose Level`)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  labs(title = "Age vs Glucose Level", x = "Age", y = "Glucose Level")
+
+ggplot(patient_df, aes(x = as.factor(Hypertension), y = `Stroke Risk Score`)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Hypertension vs Stroke Risk Score", x = "Hypertension", y = "Stroke Risk Score")
+
+```
+
+# Trend Analysis Using Violin Plots
+
+The distribution and trends of important variables across many categories were examined using violin plots. By combining the characteristics of boxplots and density plots, these plots offer a comprehensive perspective of data distribution, enabling the observation of both value concentration and spread.
+
+The first violin plot, Physical Activity vs. BMI, shows the differences in body mass index between inactive, light, moderate, and active activity levels. According to the distribution, those who are less physically active typically have wider and higher BMI ranges, whereas people who are more physically active tend to have more concentrated and possibly lower BMI values. This suggests that maintaining a healthy body weight may be influenced by physical exercise.
+
+The second plot, Physical Activity vs. Stroke Risk Score, looks at the relationship between activity levels and stroke risk. The distribution patterns indicate that while more active people exhibit comparatively lower and more stable risk levels, sedentary people often have a wider and potentially greater range of stroke risk scores. This demonstrates how physical activity may reduce the risk of stroke.
+
+The BMI distributions of individuals who had a stroke and those who did not are compared in the third violin plot, Stroke Occurrence vs. BMI. A potential correlation between raised BMI and stroke events is shown by the figure, which shows that people who experience strokes may have somewhat higher and more varied BMI values.
+
+Overall, these violin plots enhance the detection of patterns impacting stroke risk by offering deeper insights into the relationship between lifestyle factors and health markers.
+
+```{r}
+# I analysed trends using violin plots and grouped comparisons
+
+ggplot(patient_df, aes(x = `Physical Activity`, y = BMI)) +
+  geom_violin(fill = "skyblue") +
+  labs(title = "Physical Activity vs BMI", x = "Physical Activity", y = "BMI")
+
+ggplot(patient_df, aes(x = `Physical Activity`, y = `Stroke Risk Score`)) +
+  geom_violin(fill = "lightgreen") +
+  labs(title = "Physical Activity vs Stroke Risk Score", x = "Physical Activity", y = "Stroke Risk Score")
+
+ggplot(patient_df, aes(x = as.factor(`Stroke Occurrence`), y = BMI)) +
+  geom_violin(fill = "salmon") +
+  labs(title = "Stroke Occurrence vs BMI", x = "Stroke Occurrence", y = "BMI")
+
+```
+# Comparative Analysis of Health Factors and Stroke Risk
+
+The relationship between important health indicators and lifestyle factors and stroke risk was further examined using other visualisations. These charts offer more in-depth understanding of the dataset's distribution patterns and group-wise differences.
+
+The stroke risk scores of patients with and without hypertension are contrasted in the first boxplot, Stroke Risk Score by Hypertension. People with hypertension typically have higher stroke risk scores, as the visualisation clearly demonstrates. Patients with hypertension also tend to have a wider distribution of the data, which suggests that risk levels are more variable. This is consistent with accepted medical knowledge and implies that hypertension is a major contributing factor to an elevated risk of stroke.
+
+The second graphic, Glucose Level by Stroke Occurrence, provides both distribution form and summary statistics by combining a boxplot with a violin plot. A more thorough comparison of glucose levels between stroke survivors and non-stroke survivors is made possible by this hybrid visualisation. According to the distribution, people who have experienced a stroke typically have slightly higher and more variable glucose levels. Wider density regions and higher median values point to a possible link between high blood sugar levels and stroke incidents.
+
+The third boxplot, BMI by Smoking Status, examines the differences in body mass index between various smoking categories. The graphic illustrates how different groups—such as non-smokers, former smokers, and current smokers—have different median BMI levels. Although the link may not be strictly consistent across all populations, variations in spread and the existence of outliers suggest that smoking behaviour may influence BMI distribution.
+
+All things considered, these illustrations highlight the significance of variables including blood pressure, blood sugar levels, and smoking patterns in determining the risk of stroke. They offer insightful comparisons that facilitate more in-depth examination and understanding of patient health data.
+
+
+```{r}
+# I analysed stroke risk distribution by hypertension using boxplot
+
+ggplot(patient_df, aes(x = as.factor(Hypertension), y = `Stroke Risk Score`)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Stroke Risk Score by Hypertension", x = "Hypertension", y = "Stroke Risk Score")
+
+# I compared glucose levels by stroke occurrence using violin + boxplot
+
+ggplot(patient_df, aes(x = as.factor(`Stroke Occurrence`), y = `Average Glucose Level`)) +
+  geom_violin(fill = "lightgreen") +
+  geom_boxplot(width = 0.1) +
+  labs(title = "Glucose Level by Stroke Occurrence", x = "Stroke Occurrence", y = "Glucose Level")
+
+# I analysed BMI distribution across smoking status
+
+ggplot(patient_df, aes(x = `Smoking Status`, y = BMI)) +
+  geom_boxplot(fill = "salmon") +
+  labs(title = "BMI by Smoking Status", x = "Smoking Status", y = "BMI")
+
+```
+
+# Insights and Interpretation
+Numerous significant patterns and connections between health markers and stroke risk were identified by the exploratory data analysis. The positive correlation between BMI and stroke risk score is among the most notable findings. People with higher BMI values typically have a higher risk of stroke, according to visualisations like scatter plots and boxplots. This implies that being overweight may increase the risk of stroke-related disorders and cause cardiovascular strain.
+
+Age was also found to positively correlate with both the risk of stroke and glucose levels. Higher glucose levels were typically seen in older people, which may be connected to age-associated metabolic changes and a higher incidence of diseases like diabetes. Consequently, this raises the risk of stroke. This pattern was further corroborated by the correlation analysis, which showed that age plays a significant role in determining patient risk profiles.
+
+In connection with hypertension, a noteworthy trend was also found. Stroke risk scores were consistently greater in patients with hypertension than in those without. Because high blood pressure can harm blood arteries and raise the risk of stroke, this emphasises hypertension as a crucial risk factor.This group's diversity also implies that, although hypertension plays a significant role, its effects may differ based on other coexisting disorders.
+
+The degree of physical activity is another important realisation. Sedentary people were shown to have higher BMI values and, frequently, greater stroke risk scores. On the other hand, those who were more active had comparatively lower BMI and more stable risk levels. This highlights how crucial regular exercise is to preserving cardiovascular health and lowering the risk of stroke.
+
+Furthermore, there was a discernible correlation between the incidence of stroke and glucose levels. There may be a connection between poor glucose control and an increased risk of stroke because patients with higher glucose levels tended to show more fluctuation and higher median values in stroke-related groups.
+
+Several variables showed some outliers, especially in glucose levels and BMI. These extreme levels could indicate data abnormalities or high-risk individuals. Overall, the data shows that a number of variables, such as age, BMI, hypertension, glucose levels, and lifestyle choices, affect the risk of stroke. These results emphasise the significance of lifestyle changes, preventative healthcare practices, and early intervention in lowering the risk of stroke.
+
+# Appendix 
+
+AI Transparency Statement (AITS: 1)
+
+I certify that this assignment confirms to AITS Level 1 (No AI).
+There was never any usage of artificial intelligence. I worked alone to independently complete, develop, and enhance all of the analysis, coding, interpretation, and report writing.
+
+# Student ID 
+35066669
